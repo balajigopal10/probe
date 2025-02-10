@@ -4,9 +4,17 @@ public class InitializeRequest {
 
 	private int startX;
 	private int startY;
-	private String direction;
 	private int width;
 	private int height;
+	private String direction;
+
+	public InitializeRequest(int startX, int startY, int width, int height, String direction) {
+		this.startX = startX;
+		this.startY = startY;
+		this.width = width;
+		this.height = height;
+		this.direction = direction;
+	}
 
 	public int getStartX() {
 		return startX;

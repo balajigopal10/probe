@@ -1,84 +1,76 @@
 package com.sea.probe.controller;
 
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sea.probe.constants.Direction;
 import com.sea.probe.controller.dto.InitializeRequest;
 import com.sea.probe.controller.dto.ObstacleRequest;
-import com.sea.probe.model.Grid;
-import com.sea.probe.model.Probe;
+import com.sea.probe.controller.dto.ProbeCommandRequest;
+import com.sea.probe.exception.ProbeException;
+import com.sea.probe.response.ApiResponse;
+import com.sea.probe.service.ProbeService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/probe")
 public class ProbeController {
 
-	private Probe probe;
-
-//	public ProbeController() {
-//		this.probe = new Probe(0, 0, Direction.NORTH, new Grid(10, 10));
-//	}
+	@Autowired
+	private ProbeService probeService;
 
 	@PostMapping("/initialize")
-	public String initializeProbe(@RequestBody InitializeRequest request) {
-		Grid grid = new Grid(request.getWidth(), request.getHeight());
-		probe = new Probe(request.getStartX(), request.getStartY(),
-				Direction.valueOf(request.getDirection().toUpperCase()), grid);
-		return "Probe initialized at (" + request.getStartX() + ", " + request.getStartY() + ") facing "
-				+ request.getDirection();
+	public ResponseEntity<ApiResponse<String>> initializeProbe(@RequestBody @Valid InitializeRequest request) {
+		try {
+			ApiResponse<String> response = probeService.initializeProbe(request);
+			return ResponseEntity.ok(response);
+		} catch (ProbeException e) {
+			return ResponseEntity.badRequest().body(new ApiResponse<>(false, e.getMessage(), null));
+		}
 	}
 
 	@PostMapping("/executeCommands")
-	public String executeCommands(@RequestBody List<String> commands) {
-		if (probe == null) {
-			return "Error: Probe not initialized! Please initialize the probe first.";
+	public ResponseEntity<ApiResponse<String>> executeCommands(@RequestBody @Valid ProbeCommandRequest request) {
+		try {
+			ApiResponse<String> response = probeService.executeCommands(request);
+			return ResponseEntity.ok(response);
+		} catch (ProbeException e) {
+			return ResponseEntity.badRequest().body(new ApiResponse<>(false, e.getMessage(), null));
 		}
-
-		for (String command : commands) {
-			switch (command) {
-			case "F":
-				probe.moveForward();
-				break;
-			case "B":
-				probe.moveBackward();
-				break;
-			case "L":
-				probe.turnLeft();
-				break;
-			case "R":
-				probe.turnRight();
-				break;
-			default:
-				return "Error: Invalid command: " + command;
-			}
-		}
-		return "Commands executed successfully!";
 	}
 
 	@PostMapping("/addObstacle")
-	public String addObstacle(@RequestBody ObstacleRequest request) {
-		if (probe == null) {
-			return "Error: Probe not initialized! Please initialize the probe first.";
+	public ResponseEntity<ApiResponse<String>> addObstacle(@RequestBody ObstacleRequest request) {
+		try {
+			ApiResponse<String> response = probeService.addObstacle(request);
+			return ResponseEntity.ok(response);
+		} catch (ProbeException e) {
+			return ResponseEntity.badRequest().body(new ApiResponse<>(false, e.getMessage(), null));
 		}
-		probe.getGrid().addObstacle(request.getX(), request.getY());
-		return "Obstacle added at (" + request.getX() + ", " + request.getY() + ")";
 	}
 
 	@GetMapping("/visitedLocations")
-	public String getVisitedLocations() {
-		if (probe == null) {
-			return "Error: Probe not initialized! Please initialize the probe first.";
+	public ResponseEntity<ApiResponse<String>> getVisitedLocations() {
+		try {
+			ApiResponse<String> response = probeService.getVisitedLocations();
+			return ResponseEntity.ok(response);
+		} catch (ProbeException e) {
+			return ResponseEntity.badRequest().body(new ApiResponse<>(false, e.getMessage(), null));
 		}
-		return probe.getVisitedLocations().toString();
 	}
 
 	@GetMapping("/position")
-	public String getPosition() {
-		return "Position: (" + probe.getX() + ", " + probe.getY() + ") Facing: " + probe.getDirection();
+	public ResponseEntity<ApiResponse<String>> getPosition() {
+		try {
+			ApiResponse<String> response = probeService.getPosition();
+			return ResponseEntity.ok(response);
+		} catch (ProbeException e) {
+			return ResponseEntity.badRequest().body(new ApiResponse<>(false, e.getMessage(), null));
+		}
 	}
 }
