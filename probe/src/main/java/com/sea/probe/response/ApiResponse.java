@@ -1,11 +1,11 @@
 package com.sea.probe.response;
 
-public class ApiResponse<T> {
+public class ApiResponse {
 	private boolean success;
 	private String message;
-	private T data;
+	private String data;
 
-	public ApiResponse(boolean success, String message, T data) {
+	public ApiResponse(boolean success, String message, String data) {
 		this.success = success;
 		this.message = message;
 		this.data = data;
@@ -19,7 +19,7 @@ public class ApiResponse<T> {
 		return message;
 	}
 
-	public T getData() {
+	public String getData() {
 		return data;
 	}
 }

@@ -16,7 +16,7 @@ public class ProbeService {
 
 	private Probe probe;
 
-	public ApiResponse<String> initializeProbe(InitializeRequest request) {
+	public ApiResponse initializeProbe(InitializeRequest request) {
 		if (request.getDirection() == null || request.getDirection().trim().isEmpty()) {
 			throw new ProbeException("Direction cannot be null or empty.");
 		}
@@ -30,13 +30,13 @@ public class ProbeService {
 			probe = new Probe(request.getStartX(), request.getStartY(),
 					Direction.valueOf(request.getDirection().trim().toUpperCase()), grid);
 
-			return new ApiResponse<>(true, "Probe initialized successfully.", null);
+			return new ApiResponse(true, "Probe initialized successfully.", null);
 		} catch (IllegalArgumentException e) {
 			throw new ProbeException("Invalid direction. Allowed values: NORTH, EAST, SOUTH, WEST.");
 		}
 	}
 
-	public ApiResponse<String> executeCommands(ProbeCommandRequest request) {
+	public ApiResponse executeCommands(ProbeCommandRequest request) {
 		if (probe == null) {
 			throw new ProbeException("Error: Probe not initialized! Please initialize the probe first.");
 		}
@@ -50,29 +50,29 @@ public class ProbeService {
 			}
 		}
 
-		return new ApiResponse<>(true, "Commands executed successfully", null);
+		return new ApiResponse(true, "Commands executed successfully", null);
 	}
 
-	public ApiResponse<String> addObstacle(ObstacleRequest request) {
+	public ApiResponse addObstacle(ObstacleRequest request) {
 		if (probe == null) {
 			throw new ProbeException("Error: Probe not initialized! Please initialize the probe first.");
 		}
 		probe.getGrid().addObstacle(request.getX(), request.getY());
-		return new ApiResponse<>(true, "Obstacle added successfully", null);
+		return new ApiResponse(true, "Obstacle added successfully", null);
 	}
 
-	public ApiResponse<String> getVisitedLocations() {
+	public ApiResponse getVisitedLocations() {
 		if (probe == null) {
 			throw new ProbeException("Error: Probe not initialized! Please initialize the probe first.");
 		}
-		return new ApiResponse<>(true, "Visited locations: " + probe.getVisitedLocations().toString(), null);
+		return new ApiResponse(true, "Visited locations: " + probe.getVisitedLocations().toString(), null);
 	}
 
-	public ApiResponse<String> getPosition() {
+	public ApiResponse getPosition() {
 		if (probe == null) {
 			throw new ProbeException("Error: Probe not initialized! Please initialize the probe first.");
 		}
-		return new ApiResponse<>(true,
+		return new ApiResponse(true,
 				"Position: (" + probe.getX() + ", " + probe.getY() + ") Facing: " + probe.getDirection(), null);
 	}
 }

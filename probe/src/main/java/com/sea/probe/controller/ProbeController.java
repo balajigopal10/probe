@@ -18,59 +18,59 @@ import com.sea.probe.service.ProbeService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/probe")
+@RequestMapping("/api/v1/probe")
 public class ProbeController {
 
 	@Autowired
 	private ProbeService probeService;
 
 	@PostMapping("/initialize")
-	public ResponseEntity<ApiResponse<String>> initializeProbe(@RequestBody @Valid InitializeRequest request) {
+	public ResponseEntity<ApiResponse> initializeProbe(@RequestBody @Valid InitializeRequest request) {
 		try {
-			ApiResponse<String> response = probeService.initializeProbe(request);
+			ApiResponse response = probeService.initializeProbe(request);
 			return ResponseEntity.ok(response);
 		} catch (ProbeException e) {
-			return ResponseEntity.badRequest().body(new ApiResponse<>(false, e.getMessage(), null));
+			return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage(), null));
 		}
 	}
 
 	@PostMapping("/executeCommands")
-	public ResponseEntity<ApiResponse<String>> executeCommands(@RequestBody @Valid ProbeCommandRequest request) {
+	public ResponseEntity<ApiResponse> executeCommands(@RequestBody @Valid ProbeCommandRequest request) {
 		try {
-			ApiResponse<String> response = probeService.executeCommands(request);
+			ApiResponse response = probeService.executeCommands(request);
 			return ResponseEntity.ok(response);
 		} catch (ProbeException e) {
-			return ResponseEntity.badRequest().body(new ApiResponse<>(false, e.getMessage(), null));
+			return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage(), null));
 		}
 	}
 
 	@PostMapping("/addObstacle")
-	public ResponseEntity<ApiResponse<String>> addObstacle(@RequestBody ObstacleRequest request) {
+	public ResponseEntity<ApiResponse> addObstacle(@RequestBody ObstacleRequest request) {
 		try {
-			ApiResponse<String> response = probeService.addObstacle(request);
+			ApiResponse response = probeService.addObstacle(request);
 			return ResponseEntity.ok(response);
 		} catch (ProbeException e) {
-			return ResponseEntity.badRequest().body(new ApiResponse<>(false, e.getMessage(), null));
+			return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage(), null));
 		}
 	}
 
 	@GetMapping("/visitedLocations")
-	public ResponseEntity<ApiResponse<String>> getVisitedLocations() {
+	public ResponseEntity<ApiResponse> getVisitedLocations() {
 		try {
-			ApiResponse<String> response = probeService.getVisitedLocations();
+			ApiResponse response = probeService.getVisitedLocations();
 			return ResponseEntity.ok(response);
 		} catch (ProbeException e) {
-			return ResponseEntity.badRequest().body(new ApiResponse<>(false, e.getMessage(), null));
+			return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage(), null));
 		}
 	}
 
 	@GetMapping("/position")
-	public ResponseEntity<ApiResponse<String>> getPosition() {
+	public ResponseEntity<ApiResponse> getPosition() {
 		try {
-			ApiResponse<String> response = probeService.getPosition();
+			ApiResponse response = probeService.getPosition();
 			return ResponseEntity.ok(response);
 		} catch (ProbeException e) {
-			return ResponseEntity.badRequest().body(new ApiResponse<>(false, e.getMessage(), null));
+			return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage(), null));
 		}
 	}
 }
